@@ -1,0 +1,450 @@
+{
+	"info": {
+		"_postman_id": "land-optimization-api-2026",
+		"name": "AI Land Optimization API",
+		"description": "Complete API collection for AI-based Land Optimization Backend\n\n**Features:**\n- Validate land parameters\n- Optimize house layouts using Genetic Algorithm\n- View floor plan visualizations\n- Search and manage optimization history\n\n**Server:** http://localhost:8000",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Root & Health",
+			"item": [
+				{
+					"name": "Get API Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": [""]
+						},
+						"description": "Get API information, version, and available endpoints"
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["health"]
+						},
+						"description": "Check API health status and database connectivity"
+					},
+					"response": []
+				},
+				{
+					"name": "System Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/info",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "info"]
+						},
+						"description": "Get system configuration, GA parameters, and building rules"
+					},
+					"response": []
+				}
+			],
+			"description": "Basic API endpoints for health checks and system information"
+		},
+		{
+			"name": "2. Validation",
+			"item": [
+				{
+					"name": "Validate Land Input - Small House (15m x 10m)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"length\": 15,\n  \"width\": 10,\n  \"bedrooms\": 3,\n  \"toilets\": 2,\n  \"kitchen\": 1,\n  \"living_room\": 1,\n  \"dining_room\": 1,\n  \"garden_area\": 20,\n  \"parking_spaces\": 1,\n  \"balcony\": false,\n  \"front_direction\": \"north\",\n  \"road_side\": \"north\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/validate",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "validate"]
+						},
+						"description": "Validate land parameters before optimization (Small 3-bedroom house)"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Land Input - Medium House (20m x 15m)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"length\": 20,\n  \"width\": 15,\n  \"bedrooms\": 4,\n  \"toilets\": 3,\n  \"kitchen\": 1,\n  \"living_room\": 1,\n  \"dining_room\": 1,\n  \"garden_area\": 30,\n  \"parking_spaces\": 2,\n  \"balcony\": true,\n  \"front_direction\": \"east\",\n  \"road_side\": \"south\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/validate",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "validate"]
+						},
+						"description": "Validate medium-sized house (4 bedrooms, 300 sqm)"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Land Input - Large House (30m x 25m)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"length\": 30,\n  \"width\": 25,\n  \"bedrooms\": 5,\n  \"toilets\": 4,\n  \"kitchen\": 1,\n  \"living_room\": 1,\n  \"dining_room\": 1,\n  \"garden_area\": 100,\n  \"parking_spaces\": 3,\n  \"balcony\": true,\n  \"front_direction\": \"north\",\n  \"road_side\": \"west\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/validate",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "validate"]
+						},
+						"description": "Validate large luxury house (5 bedrooms, 750 sqm)"
+					},
+					"response": []
+				}
+			],
+			"description": "Validate land input parameters before running optimization"
+		},
+		{
+			"name": "3. Optimization",
+			"item": [
+				{
+					"name": "Optimize Layout - Quick Test (10 generations)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"land_input\": {\n    \"length\": 15,\n    \"width\": 10,\n    \"bedrooms\": 3,\n    \"toilets\": 2,\n    \"kitchen\": 1,\n    \"living_room\": 1,\n    \"dining_room\": 1,\n    \"garden_area\": 20,\n    \"parking_spaces\": 1,\n    \"balcony\": false,\n    \"front_direction\": \"north\",\n    \"road_side\": \"north\"\n  },\n  \"generations\": 10,\n  \"population_size\": 20,\n  \"mutation_rate\": 0.1,\n  \"crossover_rate\": 0.8\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/optimize?save_to_db=true",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "optimize"],
+							"query": [
+								{
+									"key": "save_to_db",
+									"value": "true",
+									"description": "Save result to database"
+								}
+							]
+						},
+						"description": "Quick optimization test with 10 generations (fast, lower quality)"
+					},
+					"response": []
+				},
+				{
+					"name": "Optimize Layout - Standard (50 generations)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"land_input\": {\n    \"length\": 20,\n    \"width\": 15,\n    \"bedrooms\": 4,\n    \"toilets\": 3,\n    \"kitchen\": 1,\n    \"living_room\": 1,\n    \"dining_room\": 1,\n    \"garden_area\": 30,\n    \"parking_spaces\": 2,\n    \"balcony\": true,\n    \"front_direction\": \"east\",\n    \"road_side\": \"south\"\n  },\n  \"generations\": 50,\n  \"population_size\": 50,\n  \"mutation_rate\": 0.15,\n  \"crossover_rate\": 0.85\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/optimize?save_to_db=true",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "optimize"],
+							"query": [
+								{
+									"key": "save_to_db",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Standard optimization with 50 generations (balanced quality)"
+					},
+					"response": []
+				},
+				{
+					"name": "Optimize Layout - High Quality (100 generations)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"land_input\": {\n    \"length\": 30,\n    \"width\": 25,\n    \"bedrooms\": 5,\n    \"toilets\": 4,\n    \"kitchen\": 1,\n    \"living_room\": 1,\n    \"dining_room\": 1,\n    \"garden_area\": 100,\n    \"parking_spaces\": 3,\n    \"balcony\": true,\n    \"front_direction\": \"north\",\n    \"road_side\": \"west\"\n  },\n  \"generations\": 100,\n  \"population_size\": 100,\n  \"mutation_rate\": 0.1,\n  \"crossover_rate\": 0.9\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/optimize?save_to_db=true",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "optimize"],
+							"query": [
+								{
+									"key": "save_to_db",
+									"value": "true"
+								}
+							]
+						},
+						"description": "High quality optimization with 100 generations (best quality, slower)"
+					},
+					"response": []
+				}
+			],
+			"description": "Run genetic algorithm optimization to generate optimal house layouts"
+		},
+		{
+			"name": "4. History & Search",
+			"item": [
+				{
+					"name": "Get Recent History (Last 10)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/history?limit=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "history"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of results"
+								}
+							]
+						},
+						"description": "Get 10 most recent optimization results"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Optimization by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/history/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "history", "1"]
+						},
+						"description": "Get specific optimization result by ID (change '1' to your optimization ID)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Best Optimizations (Fitness > 70)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/best?limit=10&min_fitness=70",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "best"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "min_fitness",
+									"value": "70",
+									"description": "Minimum fitness score"
+								}
+							]
+						},
+						"description": "Get best optimization results sorted by fitness score"
+					},
+					"response": []
+				},
+				{
+					"name": "Search - 3 Bedroom Houses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/search?bedrooms=3&limit=20",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "search"],
+							"query": [
+								{
+									"key": "bedrooms",
+									"value": "3"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Search for 3-bedroom house optimizations"
+					},
+					"response": []
+				},
+				{
+					"name": "Search - By Land Area Range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/search?min_area=100&max_area=300&limit=20",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "search"],
+							"query": [
+								{
+									"key": "min_area",
+									"value": "100",
+									"description": "Minimum land area (sqm)"
+								},
+								{
+									"key": "max_area",
+									"value": "300",
+									"description": "Maximum land area (sqm)"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Search by land area range (100-300 sqm)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search - High Fitness with Bedrooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/search?bedrooms=4&min_fitness=75&limit=10",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "search"],
+							"query": [
+								{
+									"key": "bedrooms",
+									"value": "4"
+								},
+								{
+									"key": "min_fitness",
+									"value": "75"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Search for 4-bedroom houses with fitness > 75"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Optimization",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/history/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "history", "1"]
+						},
+						"description": "Delete optimization by ID (change '1' to the ID you want to delete)"
+					},
+					"response": []
+				}
+			],
+			"description": "Search, retrieve, and manage optimization history"
+		},
+		{
+			"name": "5. Visualization",
+			"item": [
+				{
+					"name": "Get Floor Plan Image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/optimization/visualization/floor_plan_20260101_123456.png",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8000",
+							"path": ["api", "v1", "optimization", "visualization", "floor_plan_20260101_123456.png"]
+						},
+						"description": "Get floor plan PNG image (replace filename with actual filename from optimization response)"
+					},
+					"response": []
+				}
+			],
+			"description": "View generated floor plan visualizations"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}

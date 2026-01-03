@@ -1,0 +1,18 @@
+{
+  "crossover_rate": 0.85,
+  "generations": 150,
+  "land_input": {
+    "bedrooms": 3,
+    "dining_room": 1,
+    "front_direction": "north",
+    "garden_area": 25,
+    "kitchen": 1,
+    "length": 20,
+    "living_room": 1,
+    "road_side": "north",
+    "toilets": 2,
+    "width": 15
+  },
+  "mutation_rate": 0.2,
+  "population_size": 60
+}

@@ -1,0 +1,13 @@
+{
+  "land_input": {
+    "length": 15,
+    "width": 12,
+    "bedrooms": 3,
+    "toilets": 2,
+    "kitchen": 1,
+    "living_room": 1,
+    "dining_room": 1,
+    "front_direction": "north",
+    "road_side": "north"
+  }
+}
