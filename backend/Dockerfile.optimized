@@ -1,0 +1,42 @@
+# Optimized Backend Dockerfile for AI Land Optimization System
+# This version builds much faster
+
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies and clean up in same layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Upgrade pip and install wheel first
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+
+# Copy only requirements first (for layer caching)
+COPY requirements.txt .
+
+# Install Python dependencies with optimizations
+RUN pip install --no-cache-dir -r requirements.txt \
+    && rm -rf /root/.cache/pip/*
+
+# Copy application code (this layer changes most frequently)
+COPY . .
+
+# Create output directory
+RUN mkdir -p output
+
+# Expose port
+EXPOSE 8000
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Run the application
+CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
